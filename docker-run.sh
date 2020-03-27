@@ -4,7 +4,10 @@
 #
 
 docker run \
+  --rm \
   -it \
+  --network nvy-net \
   -v ${PWD}:/src \
   node:12 \
-  sh -c "cd /src && /bin/bash"
+  sh -c "cd /src && bash $1 $2"
+

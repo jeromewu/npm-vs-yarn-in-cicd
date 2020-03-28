@@ -4,6 +4,7 @@
 #
 
 docker run \
+  --name nvy-node \
   --rm \
   -it \
   --network nvy-net \

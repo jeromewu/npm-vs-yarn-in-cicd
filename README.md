@@ -36,12 +36,13 @@ You can use `run-test.sh` to run experiments, the syntax are like this:
 $ bash run-test.sh <Number of iterations> c<Configuration>-<Command>
 ```
 
-There are 4 commands you can use:
+There are 5 commands you can use:
 
 - npm-install
 - npm-ci
 - yarn-install
 - yarn-install-fl
+- pnpm-install
 
 For example, if you want to execute `npm install` in configuration #1 (FFFF) for 3 iterations:
 

@@ -6,7 +6,7 @@ LOCAL_REGISTRY="http://nvy-registry:4873"
 pre() {
   export TIMEFORMAT="%R"
   cd cra-app
-  rm -rf node_modules
+  rm -rf node_modules .pnpm-store
 }
 
 post() {
@@ -29,9 +29,16 @@ yarn-install-fl() {
   time (yarn install --frozen-lockfile $ARGS &> /dev/null)
 }
 
+pnpm-install() {
+  npx pnpm add -g pnpm@4.12.1 &> /dev/null
+  pnpm config set store-dir $PWD/.pnpm-store
+  time (pnpm install $ARGS &> /dev/null)
+}
+
 p1-T() {
   npm config set registry $LOCAL_REGISTRY &> /dev/null
   yarn config set registry $LOCAL_REGISTRY &> /dev/null
+  pnpm config set registry $LOCAL_REGISTRY &> /dev/null
   cp package-lock.local.json package-lock.json
   cp yarn.local.lock yarn.lock
 }
@@ -42,12 +49,16 @@ p1-F() {
 }
 
 p2-T() {
-  if [[ $1 == *"npm"* ]]; then
+  if [[ $1 == *"-npm"* ]]; then
     tar zxvf npm-node_modules.tar.gz &> /dev/null
   fi
   
-  if [[ $1 == *"yarn"* ]]; then
+  if [[ $1 == *"-yarn"* ]]; then
     tar zxvf yarn-node_modules.tar.gz &> /dev/null
+  fi
+  
+  if [[ $1 == *"-pnpm"* ]]; then
+    tar zxvf pnpm-node_modules.tar.gz &> /dev/null
   fi
 }
 
@@ -58,6 +69,7 @@ p2-F() {
 p3-T() {
   tar zxvf npm-cache.tar.gz -C / &> /dev/null
   tar zxvf yarn-cache.tar.gz -C / &> /dev/null
+  tar zxvf pnpm-cache.tar.gz &> /dev/null
 }
 
 p3-F() {
@@ -76,6 +88,13 @@ run-c0() {
   npm install $ARGS &> /dev/null
   tar zcvf npm-node_modules.tar.gz node_modules &> /dev/null
   tar zcvf npm-cache.tar.gz /root/.npm &> /dev/null
+  rm -rf node_modules
+  npx pnpm add -g pnpm@4.12.1 &> /dev/null
+  pnpm config set store-dir $PWD/.pnpm-store &> /dev/null
+  pnpm install $ARGS &> /dev/null
+  pnpm install --registry $LOCAL_REGISTRY $ARGS &> /dev/null
+  tar zcvf pnpm-node_modules.tar.gz node_modules &> /dev/null
+  tar zcvf pnpm-cache.tar.gz .pnpm-store &> /dev/null
   rm -rf node_modules
   yarn install $ARGS &> /dev/null
   tar zcvf yarn-cache.tar.gz /usr/local/share/.cache/yarn/v6 &> /dev/null

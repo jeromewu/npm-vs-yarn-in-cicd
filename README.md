@@ -2,7 +2,7 @@
   <img src="./images/npm-vs-yarn.png" />
 </p>
 
-# NPM VS YARN in CI/CD pipeline
+# npm vs yarn in CI/CD pipeline
 
 A (hopefully) comprehensive speed experiment for npm and yarn install in CI/CD pipeline
 
